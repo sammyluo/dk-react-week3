@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { connect } from "react-redux";
+import { NewTodo, TodoItem } from "./components";
+import { todoActions } from "./stores/todo/actions";
+import "./App.css";
 
-function App() {
+const mapStateToProps = (state) => ({ todoItems: state.todo.items });
+
+const mapDispatchToProps = {
+  toggleTodoCompleted: todoActions.toggleTodoCompleted,
+};
+
+const App = ({ todoItems, toggleTodoCompleted }) => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>My Todos</h1>
+      <NewTodo />
+      {todoItems.map((item) => {
+        return (
+          <TodoItem
+            key={item.id}
+            id={item.id}
+            text={item.text}
+            completed={item.completed}
+            toggleCompleted={toggleTodoCompleted}
+          />
+        );
+      })}
     </div>
   );
-}
+};
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
